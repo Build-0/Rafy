@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>仁仁成長系統 | RenRen Growth System</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+  --primary:#3B7DD8;--primary-light:#E8F0FE;--primary-dark:#2A5BA8;
+  --accent:#F5A623;--accent-light:#FFF3E0;
+  --warm:#FF7043;--warm-light:#FBE9E7;
+  --green:#43A047;--green-light:#E8F5E9;
+  --purple:#7E57C2;--purple-light:#F3E5F5;
+  --bg:#FFFAF5;--bg-card:#FFFFFF;--bg-nav:#2C3E50;
+  --text:#2D3436;--text-light:#636E72;--text-white:#FFFFFF;
+  --shadow:0 2px 12px rgba(0,0,0,.08);--shadow-hover:0 6px 24px rgba(0,0,0,.12);
+  --radius:12px;
+  --font:'Noto Sans TC',system-ui,-apple-system,sans-serif;
+  --nav-h:60px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.8;font-size:16px;}
+
+/* ===== TOP NAVBAR ===== */
+#topnav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:var(--bg-nav);z-index:1000;display:flex;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.15);}
+#topnav .brand{padding:0 20px;white-space:nowrap;font-weight:700;font-size:1.05em;color:#fff;display:flex;align-items:center;gap:8px;flex-shrink:0;cursor:pointer;}
+#topnav .nav-scroll{flex:1;overflow-x:auto;display:flex;align-items:center;gap:2px;padding:0 8px;-ms-overflow-style:none;scrollbar-width:none;}
+#topnav .nav-scroll::-webkit-scrollbar{display:none;}
+#topnav .nav-scroll a{color:rgba(255,255,255,.75);text-decoration:none;padding:8px 16px;border-radius:8px;font-size:.85em;font-weight:500;white-space:nowrap;transition:all .2s;flex-shrink:0;cursor:pointer;}
+#topnav .nav-scroll a:hover{background:rgba(255,255,255,.12);color:#fff;}
+#topnav .nav-scroll a.active{background:var(--accent);color:#fff;}
+#topnav .nav-scroll a i{margin-right:5px;}
+
+/* ===== BACK TO TOP ===== */
+#back-top{position:fixed;bottom:28px;right:28px;width:48px;height:48px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:1.2em;cursor:pointer;box-shadow:0 4px 16px rgba(59,125,216,.4);z-index:999;opacity:0;visibility:hidden;transition:all .3s;display:flex;align-items:center;justify-content:center;}
+#back-top.show{opacity:1;visibility:visible;}
+#back-top:hover{background:var(--primary-dark);transform:translateY(-3px);}
+
+/* ===== MAIN ===== */
+#main{margin-top:var(--nav-h);min-height:100vh;}
+
+/* ===== PAGE SECTIONS (tab-based) ===== */
+.page{display:none;animation:fadeIn .35s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ===== HERO BANNER (inside core philosophy page) ===== */
+.hero-banner{background:linear-gradient(135deg,#3B7DD8 0%,#7E57C2 50%,#F5A623 100%);color:#fff;padding:48px 40px 40px;text-align:center;}
+.hero-banner h1{font-size:2.6em;font-weight:900;margin-bottom:10px;text-shadow:0 2px 8px rgba(0,0,0,.2);}
+.hero-banner .subtitle{font-size:1.1em;opacity:.95;margin-bottom:20px;font-weight:300;}
+.hero-banner .tags{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;}
+.hero-banner .tag{background:rgba(255,255,255,.2);backdrop-filter:blur(10px);padding:6px 16px;border-radius:20px;font-size:.85em;}
+
+/* ===== SECTION ===== */
+.section{padding:50px 40px;max-width:1100px;margin:0 auto;}
+.section-header{margin-bottom:36px;}
+.section-header h2{font-size:1.9em;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+.section-header h2 .icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1em;color:#fff;flex-shrink:0;}
+.section-header p{color:var(--text-light);font-size:1em;margin-left:54px;}
+.divider{width:60px;height:4px;border-radius:2px;margin:30px 0;background:var(--primary);}
+
+/* ===== CARD ===== */
+.card{background:var(--bg-card);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);transition:box-shadow .3s,transform .3s;margin-bottom:20px;}
+.card:hover{box-shadow:var(--shadow-hover);transform:translateY(-2px);}
+.card h3{font-size:1.15em;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.card p,.card li{line-height:1.9;color:var(--text);}
+.card ul,.card ol{padding-left:20px;margin-top:8px;}
+.card ul li,.card ol li{margin-bottom:6px;}
+
+/* ===== GRID ===== */
+.grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+
+/* ===== COLLAPSIBLE ===== */
+.collapsible{border:1px solid #E8E8E8;border-radius:var(--radius);margin-bottom:12px;overflow:hidden;background:#fff;}
+.collapsible-header{padding:18px 24px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:1.05em;transition:background .2s;user-select:none;}
+.collapsible-header:hover{background:#F8F9FA;}
+.collapsible-header .arrow{transition:transform .3s;font-size:.8em;color:var(--text-light);}
+.collapsible-header.open .arrow{transform:rotate(180deg);}
+.collapsible-body{max-height:0;overflow:hidden;transition:max-height .4s ease;padding:0 24px;}
+.collapsible-body.open{max-height:8000px;padding:0 24px 20px;}
+.collapsible-body p,.collapsible-body li{line-height:1.9;}
+.collapsible-body ul,.collapsible-body ol{padding-left:20px;margin:8px 0;}
+
+/* ===== BADGES ===== */
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:.75em;font-weight:600;}
+.badge-blue{background:var(--primary-light);color:var(--primary);}
+.badge-orange{background:var(--accent-light);color:#E65100;}
+.badge-green{background:var(--green-light);color:var(--green);}
+.badge-purple{background:var(--purple-light);color:var(--purple);}
+.badge-red{background:var(--warm-light);color:var(--warm);}
+
+/* ===== PRINCIPLE / EMPATHY / SCENARIO BOXES ===== */
+.principle-box{border-left:4px solid var(--primary);background:var(--primary-light);padding:16px 20px;border-radius:0 8px 8px 0;margin:16px 0;}
+.principle-box.accent{border-left-color:var(--accent);background:var(--accent-light);}
+.principle-box.green{border-left-color:var(--green);background:var(--green-light);}
+.principle-box.warn{border-left-color:var(--warm);background:var(--warm-light);}
+.principle-box.purple{border-left-color:var(--purple);background:var(--purple-light);}
+.principle-box h4{font-size:.95em;margin-bottom:4px;}
+.principle-box p{font-size:.92em;line-height:1.7;}
+
+.empathy-box{background:linear-gradient(135deg,#FFF8E1,#FFF3E0);border:2px dashed var(--accent);border-radius:12px;padding:20px 24px;margin:20px 0;position:relative;}
+.empathy-box::before{content:'🪞';position:absolute;top:-14px;left:20px;font-size:1.4em;background:var(--bg);padding:0 6px;}
+.empathy-box h4{color:#E65100;margin-bottom:8px;font-size:1em;}
+.empathy-box p{font-size:.95em;line-height:1.8;}
+
+/* ===== WHAT WHY HOW ===== */
+.wwh{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:16px 0;}
+.wwh-item{padding:16px;border-radius:10px;font-size:.92em;}
+.wwh-item h4{margin-bottom:6px;font-size:.9em;}
+.wwh-item.what{background:#E3F2FD;border-top:3px solid #1976D2;}
+.wwh-item.why{background:#FFF8E1;border-top:3px solid #F9A825;}
+.wwh-item.how{background:#E8F5E9;border-top:3px solid #43A047;}
+
+/* ===== TIMELINE ===== */
+.timeline{position:relative;padding-left:36px;}
+.timeline::before{content:'';position:absolute;left:14px;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--primary),var(--accent));}
+.timeline-item{position:relative;margin-bottom:28px;padding:16px 20px;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);}
+.timeline-item::before{content:'';position:absolute;left:-29px;top:20px;width:14px;height:14px;border-radius:50%;background:var(--primary);border:3px solid #fff;box-shadow:0 0 0 2px var(--primary);}
+.timeline-item .date{font-size:.8em;color:var(--text-light);margin-bottom:4px;}
+.timeline-item h4{font-size:1em;margin-bottom:4px;}
+.timeline-item p{font-size:.9em;color:var(--text-light);}
+
+/* ===== TAB (for sub-tabs like age stages) ===== */
+.tab-nav{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
+.tab-btn{padding:10px 20px;border:2px solid #E0E0E0;background:#fff;border-radius:25px;cursor:pointer;font-size:.9em;font-weight:500;transition:all .2s;font-family:var(--font);}
+.tab-btn:hover{border-color:var(--primary);color:var(--primary);}
+.tab-btn.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* ===== DIALOGUE ===== */
+.dialogue{background:#F8F9FA;border-radius:12px;padding:20px;margin:12px 0;font-size:.92em;}
+.dialogue .line{margin-bottom:8px;padding:8px 12px;border-radius:8px;}
+.dialogue .parent{background:#E3F2FD;margin-right:20%;}
+.dialogue .child{background:#FFF8E1;margin-left:20%;}
+.dialogue .wrong{background:#FFEBEE;margin-right:20%;text-decoration:line-through;opacity:.7;}
+.dialogue .label{font-size:.75em;font-weight:700;margin-bottom:2px;}
+
+/* ===== QUOTE ===== */
+.quote{border-left:4px solid var(--accent);padding:12px 20px;margin:16px 0;font-style:italic;background:var(--accent-light);border-radius:0 8px 8px 0;}
+.quote cite{display:block;font-size:.85em;margin-top:6px;font-style:normal;color:var(--text-light);}
+
+/* ===== FOOTER ===== */
+footer{background:var(--bg-nav);color:rgba(255,255,255,.8);text-align:center;padding:30px;font-size:.85em;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:1024px){
+  .grid-3{grid-template-columns:repeat(2,1fr);}
+  .wwh{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .hero-banner{padding:36px 20px 28px;}
+  .hero-banner h1{font-size:1.8em;}
+  .section{padding:30px 16px;}
+  .grid-2,.grid-3{grid-template-columns:1fr;}
+  .tab-nav{gap:6px;}
+  .tab-btn{padding:8px 14px;font-size:.82em;}
+  #topnav .brand span{display:none;}
+  #topnav .brand{padding:0 12px;}
+  .empathy-box{padding:16px;}
+  .dialogue .parent{margin-right:5%;}
+  .dialogue .child{margin-left:5%;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== TOP HORIZONTAL NAVBAR ===== -->
+<header id="topnav">
+  <div class="brand" onclick="switchPage('philosophy')">🌱 <span>仁仁成長系統</span></div>
+  <nav class="nav-scroll">
+    <a data-page="philosophy" class="active"><i class="fas fa-brain"></i>核心理念</a>
+    <a data-page="parents"><i class="fas fa-heart"></i>給父母的話</a>
+    <a data-page="dimensions"><i class="fas fa-star"></i>五大維度</a>
+    <a data-page="stages"><i class="fas fa-child"></i>年齡階段</a>
+    <a data-page="current"><i class="fas fa-bullseye"></i>當前重點</a>
+    <a data-page="toolbox"><i class="fas fa-toolbox"></i>工具箱</a>
+    <a data-page="milestones"><i class="fas fa-flag"></i>里程碑</a>
+  </nav>
+</header>
+
+<!-- ===== BACK TO TOP BUTTON ===== -->
+<button id="back-top" title="返回頂部"><i class="fas fa-arrow-up"></i></button>
+
+<div id="main">
+
+<!-- ==================== PAGE 1: CORE PHILOSOPHY ==================== -->
+<div class="page active" id="page-philosophy">
+
+  <div class="hero-banner">
+    <h1>仁仁成長系統</h1>
+    <p class="subtitle">基於神經科學 · 發展心理學 · 依附理論<br>為 0-18 歲全人發展而設計的科學育兒系統</p>
+    <div class="tags">
+      <span class="tag">🧠 神經科學</span>
+      <span class="tag">💪 韌性</span>
+      <span class="tag">😊 快樂</span>
+      <span class="tag">🔍 好奇心</span>
+      <span class="tag">⏳ 耐心</span>
+      <span class="tag">🤖 AI時代持續學習力</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="quote">
+      「孩子不是需要被填滿的容器，而是需要被點燃的火焰。」
+      <cite>— 普魯塔克（改編）</cite>
+    </div>
+
+    <h3 style="margin:24px 0 16px;">🎯 我們的教育願景</h3>
+    <p style="margin-bottom:20px;">培養仁仁成為一個<strong>有韌性、快樂、有好奇心、有耐心</strong>的人，具備在 AI 時代<strong>持續學習</strong>的能力。不是透過管教和控制，而是透過<strong>理解大腦發展規律</strong>，在對的時間做對的事。</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>🧠 大腦是怎麼運作的？</h3>
+        <div class="principle-box">
+          <h4>關鍵事實：0-6歲建立了90%的神經連結</h4>
+          <p>每一次互動都在塑造大腦的「接線圖」。就像蓋房子——地基打得好，上面蓋什麼都穩。</p>
+        </div>
+        <ul>
+          <li><strong>用進廢退：</strong>大腦就像肌肉——經常練習的能力會變強，很少用的會退化。所以<strong>重複的日常體驗，比一次正經談話有用100倍</strong>。</li>
+          <li><strong>前額葉（理性腦）要到25歲才成熟：</strong>這是負責衝動控制、計劃、情緒調節的地方。3歲的仁仁「不能等」「必須贏」？那是因為<strong>他的「煞車系統」還沒裝好</strong>，不是他不聽話。</li>
+          <li><strong>鏡像神經元：</strong>孩子的大腦裝了一套「複製貼上」系統——他們看到你做什麼，大腦就在模擬做一遍。<strong>你的行為 = 他的教科書</strong>，比你說一百句「你要怎樣怎樣」都管用。</li>
+          <li><strong>大腦終身可改變：</strong>現在是黃金期，但錯過了也不是世界末日。只是早種早收，越早越省力。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>📚 幾個最重要的心理學概念</h3>
+        <ul>
+          <li><strong>安全依附 = 一切的根基：</strong>想像你去一個完全陌生的國家。如果你知道背後有人罩你，你就敢大膽探索；如果你不確定回來還有沒有人在，你哪裡都不敢去。孩子也一樣——<strong>確信「我被愛」，才有勇氣去探索世界</strong>。<span class="badge badge-red">最重要</span></li>
+          <li><strong>三大內在需求（自我決定論）：</strong>每個人天生需要三樣東西 — ① <strong>自主感</strong>（我能做選擇）② <strong>勝任感</strong>（我能做到）③ <strong>歸屬感</strong>（我被接納）。這三樣被滿足了，內在動機就像泉水一樣自動冒出來，根本不需要獎勵和威脅。</li>
+          <li><strong>成長型思維：</strong>「你好聰明！」 vs 「你好努力！」— 一字之差，結果天差地別。前者讓孩子害怕挑戰（萬一下次做不到呢？），後者讓孩子擁抱挑戰（努力就會有進步）。</li>
+          <li><strong>最近發展區：</strong>太簡單 = 無聊；太難 = 崩潰。最好的學習發生在「剛好有點挑戰，但努力一下就能做到」的甜蜜點。就像打遊戲——好的遊戲關卡永遠比你的能力難一點點。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="empathy-box">
+      <h4>🪞 換位思考一下</h4>
+      <p>想像你的老闆跟你說：「你很聰明，所以這個項目交給你了。」你會覺得壓力山大——萬一搞砸了，是不是說明我其實不聰明？<br><br>
+      但如果他說：「你上次處理那個難題的方式很好，我相信你努力的話也能搞定這個。」你反而會覺得輕鬆得多，因為失敗了也只是「還沒夠努力」，不是「我不行」。<br><br>
+      <strong>孩子聽到「你好聰明」和「你好努力」的感受，跟你一模一樣。</strong></p>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <h3>🤖 AI 時代，什麼能力不會被取代？</h3>
+      <p>AI 可以背書、算數、寫程式、甚至畫畫。那孩子還需要學什麼？答案是<strong>那些讓人之所以為人的能力</strong>：</p>
+      <div class="grid-3" style="margin-top:16px;">
+        <div class="principle-box"><h4>🎨 創造力</h4><p>AI 能回答問題，但提出好問題的能力是人類獨有的</p></div>
+        <div class="principle-box accent"><h4>🤝 同理心</h4><p>真正理解別人的感受、建立深度關係</p></div>
+        <div class="principle-box green"><h4>🔄 韌性</h4><p>跌倒了爬起來，在變化中找到方向</p></div>
+        <div class="principle-box"><h4>🧐 批判思維</h4><p>不盲從、會質疑、能獨立判斷</p></div>
+        <div class="principle-box accent"><h4>💡 自主學習</h4><p>不是被教會，而是自己會學——這才是終極技能</p></div>
+        <div class="principle-box green"><h4>🎯 內在動機</h4><p>因為好奇才學，因為熱愛才做，不需要別人推</p></div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>🌱 仁仁成長系統 — 以科學為基礎，以愛為核心</p>
+    <p style="margin-top:8px;">持續更新中 · 陪伴仁仁從 0 到 18 歲的每一步</p>
+    <p style="margin-top:8px;font-size:.8em;">最後更新：2025年2月</p>
+  </footer>
+</div>
+
+<!-- ==================== PAGE 2: FOR PARENTS ==================== -->
+<div class="page" id="page-parents">
+  <div class="section">
+    <div class="section-header">
+      <h2><span class="icon" style="background:var(--purple)"><i class="fas fa-heart"></i></span>給父母的話</h2>
+      <p>你沒辦法給孩子你自己沒有的東西 — 先照顧好自己</p>
+    </div>
+    <div class="divider" style="background:var(--purple)"></div>
+
+    <div class="quote">
+      「很多時候，我們對孩子的反應，不是在回應孩子的行為，而是在回應自己童年的傷痛。」
+      <cite>— Dr. Shefali Tsabary《覺醒的父母》</cite>
+    </div>
+
+    <div class="card" style="border-left:4px solid var(--purple);">
+      <h3>💜 給從未被好好對待過的你們</h3>
+      <p>你們說「我們從來沒有被正確培養過」——能說出這句話，本身就需要巨大的勇氣和自我覺察能力。<strong>你們已經在打破那個循環了。</strong></p>
+      <div class="empathy-box">
+        <h4>🪞 一個好消息</h4>
+        <p>研究發現一個超棒的事實：<strong>即使你小時候沒有被好好對待，只要你能反思和理解自己的經歷，你就能給孩子提供安全的依附。</strong><br><br>
+        心理學把這叫做「習得性安全依附」（Earned Secure Attachment）。關鍵不是你經歷了什麼，而是你<strong>如何理解和消化</strong>那些經歷。<br><br>
+        你不需要有完美的童年，才能成為好父母。你只需要<strong>願意去理解</strong>。而你們已經在做了。</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:20px;">
+      <div class="card">
+        <h3>🔍 自我覺察練習</h3>
+        <p style="margin-bottom:12px;font-style:italic;color:var(--text-light);">下次對仁仁發火的時候，先按暫停，問自己這幾個問題：</p>
+        <ul>
+          <li><strong>「這個情境讓我想到了什麼？」</strong>— 很多時候觸發你暴怒的，不是孩子做了什麼，而是你小時候的記憶被激活了。</li>
+          <li><strong>「我嘴邊冒出來的話，是不是我爸/媽對我說過的？」</strong>— 如果是，那很可能是「自動反應」，不是你真正想要的回應。</li>
+          <li><strong>「我的身體有什麼反應？」</strong>— 握拳？肩膀緊？牙關咬緊？注意到身體信號，是按下暫停鍵的第一步。</li>
+          <li><strong>6秒鐘法則</strong>：深呼吸3次。研究顯示<strong>6秒鐘</strong>就足以讓理性腦重新上線。這6秒，可能會改變你一整天的親子關係。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>🛠️ 打破那個循環</h3>
+        <ul>
+          <li><strong>發現模式：</strong>「我爸媽用打罵/冷暴力/控制來『教』我。我現在是不是也在做一樣的事？」— 光是<strong>看到</strong>這個模式，就已經是改變的開始。</li>
+          <li><strong>重新定義「管教」：</strong>管教不等於懲罰。它的拉丁語根是 disciplina = 教導。目標是「讓他學到東西」，不是「讓他受苦」。</li>
+          <li><strong>你不需要100分：</strong>研究顯示，只要<strong>30%的互動</strong>是有愛和回應的，就足以建立安全依附。重點不是完美，是<strong>搞砸了能修復</strong>。</li>
+        </ul>
+        <div class="dialogue" style="margin-top:12px;">
+          <div class="label">💬 修復示範（吼了孩子之後）</div>
+          <div class="line parent"><div class="label">✅ 你（等自己冷靜後）</div>「對不起，爸爸剛才大聲說話了，嚇到你了吧。那不是你的錯，是爸爸沒有控制好自己的情緒。」</div>
+          <div style="text-align:center;font-size:.85em;color:var(--text-light);margin-top:8px;">每一次修復，都在教他：「衝突是可以解決的。犯錯了可以補救。關係不會因為一次吵架就沒了。」</div>
+        </div>
+        <div class="principle-box warn" style="margin-top:12px;">
+          <h4>核心真理：修復 > 完美</h4>
+          <p>你<strong>一定會</strong>搞砸的。不是可能，是一定。但研究反覆證明：<strong>修復的過程本身就是最好的教育</strong>。讓孩子看到：大人也會犯錯，犯錯不可怕，重要的是承認和修正。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <h3>📖 推薦資源（不需要全看，挑一本開始就好）</h3>
+      <div class="grid-2">
+        <div>
+          <h4>📚 書籍</h4>
+          <ul>
+            <li><strong>《全腦教養法》</strong>— Daniel Siegel（最推薦入門）</li>
+            <li><strong>《正面管教》</strong>— Jane Nelsen（不打不罵的實操方法）</li>
+            <li><strong>《覺醒的父母》</strong>— Dr. Shefali（療癒自己的童年創傷）</li>
+            <li><strong>《由內而外的教養》</strong>— Daniel Siegel（理解自己才能理解孩子）</li>
+            <li><strong>《如何說孩子才會聽》</strong>— Faber & Mazlish（超實用溝通技巧）</li>
+          </ul>
+        </div>
+        <div>
+          <h4>🧠 六條核心原則（貼冰箱上）</h4>
+          <ol>
+            <li><strong>先連結，再教導</strong>（先讓他覺得被理解，再講道理）</li>
+            <li><strong>描述行為，不貼標籤</strong>（「你打了人」≠「你好壞」）</li>
+            <li><strong>接納情緒 ≠ 接受行為</strong>（「生氣可以，打人不行」）</li>
+            <li><strong>自然後果 > 人為懲罰</strong>（不穿外套→冷→下次會記得穿）</li>
+            <li><strong>修復 > 完美</strong>（搞砸了就修，比永遠不搞砸更重要）</li>
+            <li><strong>關係 > 規矩</strong>（沒有關係的基礎，任何規矩都是空的）</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>🌱 仁仁成長系統 — 以科學為基礎，以愛為核心</p>
+    <p style="margin-top:8px;font-size:.8em;">最後更新：2025年2月</p>
+  </footer>
+</div>
+
+<!-- ==================== PAGE 3: FIVE DIMENSIONS ==================== -->
+<div class="page" id="page-dimensions">
+  <div class="section">
+    <div class="section-header">
+      <h2><span class="icon" style="background:var(--green)"><i class="fas fa-star"></i></span>五大發展維度</h2>
+      <p>人不是只有「聰不聰明」一個維度 — 全面發展才有底氣</p>
+    </div>
+    <div class="divider" style="background:var(--green)"></div>
+
+    <!-- Dimension 1: Physical -->
+    <div class="collapsible">
+      <div class="collapsible-header">🏃 維度一：身體健康 —「硬體」不好，「軟體」再強都白搭 <span class="arrow"><i class="fas fa-chevron-down"></i></span></div>
+      <div class="collapsible-body">
+        <div class="principle-box green">
+          <h4>一句話核心</h4>
+          <p>運動會讓大腦分泌「肥料」（BDNF），睡覺時大腦在做「系統更新」，食物就是「建築材料」。身體好，腦子才好。</p>
+        </div>
+        <div class="empathy-box">
+          <h4>🪞 你有沒有過這樣的經驗？</h4>
+          <p>昨晚沒睡好，今天開會腦子一片漿糊，老闆說什麼都聽不進去。<br><br>
+          孩子每天都需要11-13小時的睡眠。<strong>一個沒睡飽的孩子，「不聽話」的程度會直接翻倍</strong>——不是他不想聽，是大腦真的沒有電了。</p>
+        </div>
+        <div class="wwh">
+          <div class="wwh-item what"><h4>📋 做什麼</h4><ul><li>每天1-2小時戶外活動（跑、跳、爬）</li><li>規律睡眠（3歲需11-13小時含午睡）</li><li>營養均衡，尤其是 omega-3、鐵、鋅</li><li>少吃加工食品和含糖飲料</li><li>多玩沙、水、泥巴（感官發展）</li></ul></div>
+          <div class="wwh-item why"><h4>🧠 為什麼</h4><ul><li>跑跳 → 大腦分泌BDNF → 記憶力+專注力 ↑</li><li>睡覺 → 大腦整理白天的學習+清垃圾</li><li>Omega-3 → 神經元「高速公路」修得更快</li><li>糖太多 → 大腦發炎 → 注意力嚴重下降</li><li>各種觸感 → 感覺統合 → 為將來讀寫打基礎</li></ul></div>
+          <div class="wwh-item how"><h4>✅ 怎麼做</h4><ul><li>把運動變遊戲（不是「你去跑步」而是「追我呀！」）</li><li>睡前儀式固定化：洗澡→故事→安撫→熄燈</li><li>餐桌提供多樣食材，不強迫（他不吃就撤走，下餐再說）</li><li>每週至少去2次公園/大自然</li></ul></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dimension 2: Cognitive -->
+    <div class="collapsible">
+      <div class="collapsible-header">🔍 維度二：認知與學習力 — 好奇心比知識量重要一千倍 <span class="arrow"><i class="fas fa-chevron-down"></i></span></div>
+      <div class="collapsible-body">
+        <div class="principle-box">
+          <h4>一句話核心</h4>
+          <p>好奇心 = 大腦自帶的學習引擎。當孩子好奇的時候，大腦自動進入「超級吸收模式」，記憶力和注意力全部拉滿。你要做的不是「教他東西」，而是「保護他的好奇心不被殺死」。</p>
+        </div>
+        <div class="empathy-box">
+          <h4>🪞 你追劇的時候...</h4>
+          <p>你追一部超好看的劇，到了關鍵劇情，有人突然叫你「別看了，去學英語，比較有用」。你什麼感覺？<br><br>
+          孩子在全神貫注地研究螞蟻、拆玩具、往牆上塗鴉的時候——那就是他的「追劇時刻」。那個專注，就是好奇心在工作。<strong>在他沉浸的時候，別打斷他。</strong>那個專注力，以後學什麼都用得上。</p>
+        </div>
+        <div class="wwh">
+          <div class="wwh-item what"><h4>📋 做什麼</h4><ul><li>他問「為什麼？」→ 先反問「你覺得呢？」</li><li>開放玩具（積木、彩泥）> 電子玩具</li><li>每天親子共讀（邊讀邊聊比照著念有效10倍）</li><li>允許無聊 — 無聊是創造力的種子</li><li>屏幕時間 < 1小時/天</li></ul></div>
+          <div class="wwh-item why"><h4>🧠 為什麼</h4><ul><li>提問激活「深度學習」神經網絡</li><li>開放玩具 = 一種玩具、100種玩法 = 更多神經連結</li><li>電子玩具 = 一個按鈕、一種反應 = 大腦躺平</li><li>無聊的時候大腦才會自己找事做 = 創造力</li></ul></div>
+          <div class="wwh-item how"><h4>✅ 怎麼做</h4><ul><li>他在探索的時候，蹲下來跟他一起看（而不是「小心弄髒！」）</li><li>描述他在做的事：「你把紅色和藍色混在一起，變成了紫色耶！」</li><li>共讀時問：「你覺得小兔子接下來會怎麼做？」</li><li>在家設一個「什麼都可以弄亂」的探索角</li></ul></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dimension 3: Emotional -->
+    <div class="collapsible">
+      <div class="collapsible-header">💪 維度三：情緒與韌性 — 不是「別哭了」，而是「哭完了我們再想辦法」 <span class="arrow"><i class="fas fa-chevron-down"></i></span></div>
+      <div class="collapsible-body">
+        <div class="principle-box warn">
+          <h4>一句話核心</h4>
+          <p>情緒調節不是天生的，是<strong>被人安撫了無數次之後</strong>才學會的。就像學游泳——先被人扶著，慢慢放手，最後才能自己遊。你不能把一個不會游泳的小孩扔水裡然後喊「自己遊！」</p>
+        </div>
+        <div class="empathy-box">
+          <h4>🪞 你崩潰的時候</h4>
+          <p>你工作上出了大問題，壓力到了極點，回家想跟另一半傾訴。結果對方說：「有什麼好煩的？你不要想太多就好了。」<br><br>
+          有用嗎？大概只會讓你更想摔門。<br><br>
+          但如果對方說：「聽起來真的很難。你想聊聊嗎？我在這。」— 你可能就慢慢平靜下來了。<br><br>
+          <strong>孩子哭鬧、發脾氣的時候，他需要的不是「別哭了」，而是「我在這裡，你的感受是正常的」。</strong></p>
+        </div>
+        <div class="wwh">
+          <div class="wwh-item what"><h4>📋 做什麼</h4><ul><li>接納所有情緒（生氣、難過都可以，但打人不行）</li><li>幫他「命名」情緒：「你很生氣」</li><li>允許他經歷適度的挫折</li><li>示範你自己怎麼處理情緒</li></ul></div>
+          <div class="wwh-item why"><h4>🧠 為什麼</h4><ul><li>命名情緒 → 理性腦啟動 → 情緒鬧鐘自動調低音量</li><li>「別哭了」→ 壓抑情緒 → 以後用更激烈的方式爆發</li><li>小挫折 + 被支持 = 韌性的「疫苗」</li><li>你生氣時深呼吸，他看到了就學會了</li></ul></div>
+          <div class="wwh-item how"><h4>✅ 怎麼做</h4><ul><li>蹲下來、平視他：「你現在很[生氣/難過]，因為[原因]。」</li><li>「生氣是可以的。但是打人/扔東西不行。」</li><li>自己快爆的時候：「爸爸現在很煩躁，我需要深呼吸。」</li><li>永遠不說：「男孩子不許哭」「有什麼好哭的」</li></ul></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dimension 4: Social -->
+    <div class="collapsible">
+      <div class="collapsible-header">🤝 維度四：社交能力 — 不是「快叫叔叔！」，而是讓他慢慢學 <span class="arrow"><i class="fas fa-chevron-down"></i></span></div>
+      <div class="collapsible-body">
+        <div class="principle-box accent">
+          <h4>一句話核心</h4>
+          <p>社交技巧是在真實互動中「泡」出來的，不是教出來的。強迫一個3歲小孩打招呼，就像逼一個不會游泳的人跳水表演——除了恐懼什麼都學不到。</p>
+        </div>
+        <div class="empathy-box">
+          <h4>🪞 如果你在一個派對上...</h4>
+          <p>你被帶到一個全是陌生人的派對，主人大聲說：「這是小陳，小陳你跟大家打招呼！說你好！大聲點！」<br><br>
+          你大概想鑽地洞。<br><br>
+          但如果主人帶你走到一個人旁邊，輕鬆地說：「這是我朋友老王，他也很喜歡爬山。」你自然就聊起來了。<br><br>
+          <strong>孩子在社交場合的尷尬和緊張，跟你一模一樣。示範，比強迫有效100倍。</strong></p>
+        </div>
+        <div class="wwh">
+          <div class="wwh-item what"><h4>📋 做什麼</h4><ul><li>多讓他跟同齡小朋友玩</li><li>你在他面前展示禮貌用語（不是命令他說）</li><li>在家玩角色扮演遊戲</li><li>衝突時引導他自己想辦法</li></ul></div>
+          <div class="wwh-item why"><h4>🧠 為什麼</h4><ul><li>在真實互動中犯錯→修正→再試 = 社交直覺養成</li><li>強迫道歉 = 學會「表演」，不是學會「理解」</li><li>角色扮演 = 在安全環境中預演社交場景</li></ul></div>
+          <div class="wwh-item how"><h4>✅ 怎麼做</h4><ul><li>你對別人說「謝謝」「你好」，他看在眼裡記在心裡</li><li>他不打招呼？你代替：「仁仁有點害羞，但他心裡跟你說了你好喔！」</li><li>衝突時：「你們兩個都想玩——有什麼好辦法？」</li><li>⚠️ 絕對不在別人面前說「你怎麼不叫人？真沒禮貌」</li></ul></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dimension 5: Character -->
+    <div class="collapsible">
+      <div class="collapsible-header">🌟 維度五：品格與價值觀 — 說教沒用，你做的才算數 <span class="arrow"><i class="fas fa-chevron-down"></i></span></div>
+      <div class="collapsible-body">
+        <div class="principle-box green">
+          <h4>一句話核心</h4>
+          <p>品格是「被吸收」的，不是「被教育」的。你跟孩子說100次「要有禮貌」，不如他看到你對餐廳服務員真誠地說一次「謝謝」。</p>
+        </div>
+        <div class="empathy-box">
+          <h4>🪞 你討厭的那個同事...</h4>
+          <p>你一定認識一種人：嘴上說得漂亮，「我們要互相尊重」「team work 很重要」，但搶功勞的時候跑最快。你尊重他嗎？你會學他嗎？<br><br>
+          相反，有些人話不多，但每次都默默幫你——你自然而然會想成為那樣的人。<br><br>
+          <strong>孩子也一樣：他們不聽你怎麼說，他們看你怎麼做。</strong></p>
+        </div>
+        <div class="wwh">
+          <div class="wwh-item what"><h4>📋 做什麼</h4><ul><li>用行動展示，而非用嘴巴教導</li><li>讀有價值觀的繪本（故事的力量 > 說教的力量）</li><li>捕捉並強化他自發的善行</li><li>讓他參與「幫助別人」的行為</li></ul></div>
+          <div class="wwh-item why"><h4>🧠 為什麼</h4><ul><li>大腦的鏡像神經元 = 天然「複製貼上」</li><li>故事同時激活語言、情緒、想像、記憶 = 全腦學習</li><li>幫助別人 → 催產素上升 → 真正的內在滿足感</li></ul></div>
+          <div class="wwh-item how"><h4>✅ 怎麼做</h4><ul><li>你對服務員微笑說謝謝——他在旁邊默默看到了</li><li>「你把餅乾分給妹妹，她好開心！你做了一件很棒的事。」</li><li>一起做簡單的家務，一起給需要的人送東西</li><li>建立每天的「感恩時間」：今天什麼事讓你開心？</li></ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>🌱 仁仁成長系統 — 以科學為基礎，以愛為核心</p>
+    <p style="margin-top:8px;font-size:.8em;">最後更新：2025年2月</p>
+  </footer>
+</div>
+
+<!-- ==================== PAGE 4: AGE STAGES ==================== -->
+<div class="page" id="page-stages">
+  <div class="section">
+    <div class="section-header">
+      <h2><span class="icon" style="background:var(--accent)"><i class="fas fa-child"></i></span>年齡階段指南</h2>
+      <p>每個階段的大腦都在忙不同的事，理解了就不會亂焦慮</p>
+    </div>
+    <div class="divider" style="background:var(--accent)"></div>
+
+    <div class="tab-nav">
+      <button class="tab-btn" data-tab="stage-0-3">👶 0-3歲 奠基期</button>
+      <button class="tab-btn active" data-tab="stage-3-6">⭐ 3-6歲 黃金期</button>
+      <button class="tab-btn" data-tab="stage-6-12">📖 6-12歲 成長期</button>
+      <button class="tab-btn" data-tab="stage-12-18">🚀 12-18歲 蛻變期</button>
+    </div>
+
+    <!-- 0-3 -->
+    <div class="tab-content" id="stage-0-3">
+      <div class="card">
+        <h3>👶 0-3歲：世界安不安全？全看你</h3>
+        <div class="principle-box">
+          <h4>核心問題：「我能不能信任這個世界？」</h4>
+          <p>這個階段的大腦每秒建立超過100萬個神經連結。寶寶在用每一次互動「投票」決定：世界是友善的，還是危險的？</p>
+        </div>
+        <div class="empathy-box">
+          <h4>🪞 想像一下</h4>
+          <p>你到了一個完全不懂語言的外國，肚子餓了不會說、不舒服不會表達、害怕了只能哭。如果每次你哭的時候，身邊的人都跑過來安慰你、幫你解決——你會覺得「這個地方挺安全的」。<br><br>
+          但如果你哭了半天沒人理，或者有人兇你「哭什麼哭！」——你很快就會學會：<strong>別指望別人，什麼都得靠自己忍</strong>。<br><br>
+          嬰兒的世界，就是這樣。</p>
+        </div>
+        <div class="wwh">
+          <div class="wwh-item what"><h4>📋 做什麼</h4><p>哭了就回應、大量擁抱和皮膚接觸、穩定的日常作息、讓他在安全的地方自由爬來爬去</p></div>
+          <div class="wwh-item why"><h4>🧠 為什麼</h4><p>即時回應 = 大腦學會「世界是安全的」。壓力荷爾蒙保持低水平，大腦才能安心發育，而不是忙著「保命」。</p></div>
+          <div class="wwh-item how"><h4>✅ 怎麼做</h4><p>嬰兒哭了→先抱起來再判斷原因；每天趴地上陪他玩；像「體育直播」一樣描述他的行為：「你在爬呀！爬到那邊了！」</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3-6 CURRENT -->
+    <div class="tab-content active" id="stage-3-6">
+      <div class="card" style="border-left:4px solid var(--accent);">
+        <h3>⭐ 3-6歲：大腦在裝修，請多包涵 <span class="badge badge-orange">仁仁目前階段</span></h3>
+        <div class="principle-box accent">
+          <h4>核心問題：「我可以自己來嗎？」</h4>
+          <p>孩子開始有強烈的「我要自己來」意願。但他的大腦就像一間正在裝修的房子——<strong>設計圖有了，但施工還沒完</strong>。他想自己控制，但常常控制不住。<strong>這不是不聽話，是硬體還沒跟上軟體。</strong></p>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>🧠 他的大腦正在忙什麼？</h3>
+          <ul>
+            <li><strong>「煞車系統」在安裝中：</strong>前額葉（負責自控）正在施工。就像你手機系統在更新——有時候能用，有時候當機。所以他有時候「懂事」，有時候「失控」，不是裝的，是真的不穩定。</li>
+            <li><strong>情緒引擎超級強大，但方向盤很小：</strong>杏仁核（情緒中心）全速運轉，但理性腦跟不上。就像一台馬力超強但方向盤超小的車——情緒油門一踩就飆，煞車卻還是腳踏車等級的。</li>
+            <li><strong>還看不到別人的視角：</strong>3歲的孩子以為全世界都跟他看到的一樣。這不是自私，是他的大腦<strong>還沒解鎖「別人眼中的世界」這個功能</strong>。大約4歲開始慢慢開通。</li>
+            <li><strong>語言大爆發：</strong>詞彙量從300飆到3000+。語言不只是說話——它是「用嘴巴處理情緒」的工具。</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>🎯 這個階段的培養重點</h3>
+          <ul>
+            <li><strong>幫他「看見」情緒：</strong>「你現在很生氣，因為積木倒了。」— 研究發現，光是把情緒講出來，就能讓大腦的情緒警報降低一半。這叫 "Name it to tame it"（說出來就能馴服它）。</li>
+            <li><strong>玩就是學：</strong>不需要什麼「早教」，遊戲就是這個年齡最強大的學習方式。假裝遊戲（扮醫生、扮老師）直接訓練大腦的社交理解能力。</li>
+            <li><strong>給「假選擇」：</strong>「你想先刷牙還是先換衣服？」— 其實兩個都得做，但他覺得自己有選擇權，配合度立刻提高300%。</li>
+            <li><strong>說「可以做什麼」：</strong>大腦聽不懂「不」。你說「不要跑！」大腦先處理「跑」再處理「不要」。改說「慢慢走」，效果好10倍。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="empathy-box">
+        <h4>🪞 感受一下「被說教」的滋味</h4>
+        <p>想像你跟朋友大吵一架，氣到快爆炸。你老婆/老公走過來說：「你不應該生氣，跟朋友吵架不好，你應該去道歉。」<br><br>
+        你什麼感覺？大概是<strong>更氣了</strong>，對吧？<br><br>
+        但如果她/他說：「吵架了啊？一定很不開心吧。」然後安靜地在旁邊陪你坐一下。等你氣消了，再聊怎麼處理。<br><br>
+        <strong>孩子崩潰的時候，跟你氣到快爆炸的時候，需要的是一模一樣的東西——先被理解，再講道理。</strong></p>
+      </div>
+      <div class="card">
+        <h3>💬 對話範例：搶了別人的玩具</h3>
+        <div class="dialogue">
+          <div class="line wrong"><div class="label">❌ 本能反應（但沒用）</div>「你怎麼又搶東西！說對不起！」</div>
+          <div class="line parent"><div class="label">✅ 先連結</div>「你很想玩那個玩具對嗎？想要的東西拿不到，真的很著急。」</div>
+          <div class="line parent"><div class="label">✅ 再引導</div>「但是直接拿走，小朋友會傷心。我們可以問他：『可以借我玩嗎？』你試試看？」</div>
+        </div>
+        <div class="principle-box" style="margin-top:12px;">
+          <h4>🧠 為什麼「先共情」有效？</h4>
+          <p>當孩子情緒爆發時，他的理性腦（前額葉）等於是<strong>斷線了</strong>。你在這時候講道理，就像對一台關機的電腦打字——什麼都不會發生。先共情 = 幫他把電腦重新開機。開機了，才能輸入新信息。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6-12 -->
+    <div class="tab-content" id="stage-6-12">
+      <div class="card">
+        <h3>📖 6-12歲：「我行不行？」的關鍵期</h3>
+        <div class="principle-box">
+          <h4>核心問題：「我是有能力的嗎？」</h4>
+          <p>開始在學業和社交中尋找「我的位置」。這個階段建立的自信心，會影響他一輩子對自己的看法。</p>
+        </div>
+        <div class="empathy-box">
+          <h4>🪞 回想你的小學時期</h4>
+          <p>有沒有一個老師或大人，曾經說過一句讓你覺得「我可以的」的話？或者，一句讓你覺得「我不行」的話？<br><br>
+          很多人到了30、40歲，還記得小時候被說「你怎麼這麼笨」的那個瞬間。<br><br>
+          <strong>這個階段，你的每一句評價，都可能變成他腦海裡的「自我對話」——用一輩子。</strong></p>
+        </div>
+        <div class="wwh">
+          <div class="wwh-item what"><h4>📋 做什麼</h4><p>讓他探索不同興趣、教「怎麼學」而不是「學什麼」、允許犯錯和失敗、培養責任感（從小事開始）</p></div>
+          <div class="wwh-item why"><h4>🧠 為什麼</h4><p>大腦進入第二次修剪期——經常用的能力會被保留和強化，不用的會被淘汰。這時期發展的興趣和技能，會被大腦「永久保存」。</p></div>
+          <div class="wwh-item how"><h4>✅ 怎麼做</h4><p>問「你覺得怎麼解決？」而非直接給答案；允許他嘗試整理書包（亂了也別馬上接手）；讓「失敗→學習→再試」成為日常</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12-18 -->
+    <div class="tab-content" id="stage-12-18">
+      <div class="card">
+        <h3>🚀 12-18歲：「我是誰？」的探索期</h3>
+        <div class="principle-box">
+          <h4>核心問題：「我到底是誰？我想成為什麼樣的人？」</h4>
+          <p>青春期大腦正在經歷大規模重組。就像把整間房子拆了重新裝修——暫時會很亂，但完工後會比以前更好。</p>
+        </div>
+        <div class="empathy-box">
+          <h4>🪞 想像你剛換了一份全新的工作</h4>
+          <p>新環境、新同事、新規則、不知道自己行不行——這種不確定感就是青春期孩子<strong>每天</strong>的感受。<br><br>
+          這時候，如果你老闆天天盯著你、審問你午飯跟誰吃、管你的手機——你會怎樣？大概想辭職。<br><br>
+          但如果你知道有問題的時候可以去找他，而且他不會說「我早就跟你說過了」——你反而會更信任他，更願意聽他的建議。<br><br>
+          <strong>青春期最重要的事：讓他知道「無論發生什麼，家的門永遠開著」。</strong></p>
+        </div>
+        <div class="wwh">
+          <div class="wwh-item what"><h4>📋 做什麼</h4><p>尊重隱私、保持開放溝通（不是審問）、當安全網而非遙控器、支持他探索身份</p></div>
+          <div class="wwh-item why"><h4>🧠 為什麼</h4><p>多巴胺系統超敏感（追求刺激），催產素系統轉向朋友（渴望同伴認可）。這不是「叛逆」，是大腦把他往獨立的方向推。</p></div>
+          <div class="wwh-item how"><h4>✅ 怎麼做</h4><p>定期一對一聊天（不是審問，是「你最近有什麼想法？」）；給越來越大的自主空間；從「命令者」變成「顧問」</p></div>
+        </div>
+        <p style="margin-top:16px;"><strong>父母角色轉變路線圖：</strong>管理者 → 教練 → 顧問 → 朋友。核心原則：<strong>保持連結，比保持控制重要一萬倍。</strong></p>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>🌱 仁仁成長系統 — 以科學為基礎，以愛為核心</p>
+    <p style="margin-top:8px;font-size:.8em;">最後更新：2025年2月</p>
+  </footer>
+</div>
+
+<!-- ==================== PAGE 5: CURRENT FOCUS ==================== -->
+<div class="page" id="page-current">
+  <div class="section">
+    <div class="section-header">
+      <h2><span class="icon" style="background:var(--warm)"><i class="fas fa-bullseye"></i></span>當前重點</h2>
+      <p>仁仁現在的具體議題 — 先別急著「解決」，先搞懂「為什麼」</p>
+    </div>
+    <div class="divider" style="background:var(--warm)"></div>
+
+    <!-- Issue 1: Must Win -->
+    <div class="card" style="border-top:4px solid var(--warm);">
+      <h3>🏆 議題一：事事要贏，輸不起</h3>
+      <div class="principle-box warn">
+        <h4>⚡ 重要前提：這是正常的，不是問題</h4>
+        <p>3歲孩子「必須贏」不是性格缺陷，是<strong>三股發展力量同時作用</strong>的正常結果。理解了原因，你就不會焦慮了。</p>
+      </div>
+      <div class="empathy-box">
+        <h4>🪞 想像你在打一個很重要的比賽</h4>
+        <p>你花了一整天準備一個報告，結果老闆說：「嗯，小李做得更好。」<br><br>
+        你什麼感覺？心裡不舒服、覺得自己不夠好、想證明自己——這些都很正常吧？<br><br>
+        現在把你的「報告」換成「積木比賽」，把「老闆」換成「爸爸」——仁仁輸的時候，感受到的<strong>挫敗感跟你一模一樣</strong>。<br><br>
+        差別只在：你有30年的人生經驗來消化這個情緒，<strong>他只有3年，而且煞車系統還沒裝好。</strong></p>
+      </div>
+
+      <h4 style="margin:20px 0 12px;">🧠 底層原因（三層）</h4>
+      <div class="grid-3">
+        <div class="card" style="background:#FFF3E0;box-shadow:none;">
+          <h3 style="font-size:1em;">① 認知層面</h3>
+          <p>3歲是黑白思維：贏=好人，輸=壞人。<strong>他還不具備理解「享受過程」這種灰色地帶的腦力。</strong>就像你不會要求一個色盲的人欣賞日落的色彩。</p>
+        </div>
+        <div class="card" style="background:#FFF3E0;box-shadow:none;">
+          <h3 style="font-size:1em;">② 心理需求</h3>
+          <p>贏 = 「我有能力！」。這對正在建立自我的孩子來說至關重要。<strong>輸被體驗為「我不行」</strong>，這種打擊在他內心的地震級別，跟你被公司裁員差不多。</p>
+        </div>
+        <div class="card" style="background:#FFF3E0;box-shadow:none;">
+          <h3 style="font-size:1em;">③ 大腦能力</h3>
+          <p>就算你成功讓他「理解」了輸沒關係，<strong>他的前額葉也沒能力把理解變成行動</strong>。就像你知道不該吃宵夜，但半夜就是忍不住——大人都控制不了，何況3歲小孩？</p>
+        </div>
+      </div>
+
+      <h4 style="margin:20px 0 12px;">✅ 怎麼辦？</h4>
+      <div class="collapsible">
+        <div class="collapsible-header">策略一：別總讓他贏，也別故意讓他輸 <span class="arrow"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="collapsible-body">
+          <p>想像你想讓一個怕水的人學游泳。你不會把他扔深水區（崩潰），也不會只讓他在岸上看別人游（學不到）。你會讓他在淺水區慢慢適應。</p>
+          <ul>
+            <li><strong>遊戲中自然有輸有贏</strong>（開始可以70%贏、30%輸）</li>
+            <li><strong>多玩合作遊戲</strong>：「我們一起打敗大恐龍！」— 沒有輸贏，只有一起努力</li>
+            <li><strong>強調過程</strong>：「哇你剛才的策略好聰明！」而不是「你贏了好棒！」</li>
+          </ul>
+        </div>
+      </div>
+      <div class="collapsible">
+        <div class="collapsible-header">策略二：他輸了之後 —「黃金修復時刻」 <span class="arrow"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="collapsible-body">
+          <p>他輸了崩潰大哭的那一刻，是你最重要的教育時刻。你的反應，決定他的大腦記住的是「挫折=世界末日」還是「挫折=不舒服但會過去」。</p>
+          <ol>
+            <li><strong>蹲下來平視</strong>：「輸了好難過。你很想贏。」（不是「沒什麼好哭的」）</li>
+            <li><strong>安靜陪伴</strong>：「你想哭就哭，我在這。」（不是「好了好了別哭了」）</li>
+            <li><strong>等他情緒過了</strong>：「你剛才雖然很難過，但你沒有打人也沒有摔東西——這很了不起。」</li>
+            <li><strong>邀請重來</strong>：「準備好了嗎？要不要再來一次？」</li>
+          </ol>
+          <div class="principle-box warn" style="margin-top:12px;">
+            <h4>❌ 千萬不要說的話</h4>
+            <p>「沒什麼好哭的」「男孩子要勇敢」「下次你就會贏了」——這些話聽起來是在安慰，其實是在說：<strong>「你的感受不重要」「你的情緒是錯的」</strong>。長期下來，他會學會壓抑而不是調節。</p>
+          </div>
+        </div>
+      </div>
+      <div class="collapsible">
+        <div class="collapsible-header">策略三：讓他看到你怎麼「輸得漂亮」 <span class="arrow"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="collapsible-body">
+          <p>你的大腦裡有一套「鏡像系統」，會自動複製你看到的行為。仁仁的這套系統正處於巔峰期——<strong>他看到你做什麼，比聽到你說什麼有效10倍</strong>。</p>
+          <ul>
+            <li>跟他一起玩遊戲，你輸了：「啊我輸了！有點不開心… 但是這個遊戲好好玩！再來一局！」</li>
+            <li>做事出錯了：「哎呀拼錯了。沒關係，換個方法試試。」</li>
+            <li>大聲說出你的思考過程——讓他「聽到」你的大腦是怎麼處理失敗的</li>
+          </ul>
+        </div>
+      </div>
+      <div class="principle-box" style="margin-top:16px;">
+        <h4>📅 什麼時候會好轉？</h4>
+        <p>這不是需要「矯正」的問題，而是一個<strong>會自然改善的發展過程</strong>。隨著前額葉成熟 + 你持續的正確回應，大約在 <strong>5-6歲</strong> 會明顯好轉。你現在做的每一次耐心陪伴，都在幫他的大腦修建「韌性高速公路」。</p>
+      </div>
+    </div>
+
+    <!-- Issue 2: Manners -->
+    <div class="card" style="border-top:4px solid var(--accent);margin-top:24px;">
+      <h3>🙏 議題二：「給我！」「我的！」不說謝謝</h3>
+      <div class="principle-box accent">
+        <h4>⚡ 再說一次：正常的，不是沒教養</h4>
+        <p>3歲的「不禮貌」跟品德無關，跟<strong>大腦的開發進度</strong>有關。</p>
+      </div>
+      <div class="empathy-box">
+        <h4>🪞 如果你去了一個外星球...</h4>
+        <p>你到了一個語言全新的星球。你渴了，不會說當地語言，只會用最簡單的方式比劃：「水！」<br><br>
+        當地人看你沒說「請」和「謝謝」，就覺得你沒禮貌——但你其實是<strong>腦容量全部用來表達基本需求</strong>，根本沒有餘力去處理「禮貌用語」這種高級技能。<br><br>
+        3歲孩子說「給我！」就是這個狀態。他不是沒教養，是<strong>語言和認知的頻寬不夠</strong>，只能走最短路徑。</p>
+      </div>
+      <h4 style="margin:20px 0 12px;">🧠 底層原因</h4>
+      <ul>
+        <li><strong>語言頻寬有限：</strong>「給我水」用了3個字就完成任務，「請給我水好嗎？謝謝。」要用10個字。對3歲大腦來說，後者的認知負荷是前者的三倍。</li>
+        <li><strong>還不懂「別人幫我是額外的」：</strong>說「謝謝」需要理解「這個人做了一件不是必須做的事」——這需要換位思考能力，3歲才剛剛開始萌芽。</li>
+        <li><strong>「我的！」是一件好事：</strong>2-3歲瘋狂喊「我的！」其實是他在確認「我是一個獨立的人，我有我的東西」。這是健康的自我意識在發展。恭喜你，他的大腦在正常運作！</li>
+      </ul>
+      <h4 style="margin:20px 0 12px;">✅ 怎麼辦？</h4>
+      <div class="collapsible">
+        <div class="collapsible-header">策略一：你做給他看（最重要的策略）<span class="arrow"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="collapsible-body">
+          <p>仁仁的大腦裡有一面「魔鏡」，會自動反射你的行為。與其命令他說謝謝，不如讓他<strong>每天看到你說100次謝謝</strong>。</p>
+          <ul>
+            <li>你對仁仁說：「<strong>請</strong>幫爸爸拿一下那個杯子好嗎？<strong>謝謝</strong>你！」</li>
+            <li>你跟另一半：「親愛的，<strong>麻煩</strong>遞一下鹽。<strong>謝啦</strong>。」</li>
+            <li>你對餐廳服務員、鄰居、保安——在他面前，高頻率使用禮貌語言</li>
+            <li>⚠️ <strong>絕對不在別人面前說</strong>：「你怎麼不說謝謝？真沒禮貌。」—— 這只會製造羞恥感，完全適得其反</li>
+          </ul>
+        </div>
+      </div>
+      <div class="collapsible">
+        <div class="collapsible-header">策略二：溫柔提示，但不威脅 <span class="arrow"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="collapsible-body">
+          <div class="empathy-box">
+            <h4>🪞 想像你老闆這樣對你...</h4>
+            <p>你請同事幫你影印一份文件，忘了說謝謝。老闆當著全辦公室的面說：「你怎麼不說謝謝？太沒禮貌了。」<br><br>
+            下次你會真心感謝嗎？不會。你只會在恐懼中機械地說「謝謝」，心裡只有尷尬和怨恨。<br><br>
+            <strong>強迫出來的「謝謝」，只是恐懼驅動的條件反射，不是真正的感恩。</strong></p>
+          </div>
+          <ul>
+            <li>他說「給我水！」→ 你溫和地說：「你可以說『請給我水好嗎？』」</li>
+            <li>他照做了 → 笑著給他：「好的！給你！」</li>
+            <li>他不照做 → <strong>也給他水</strong>。水是基本需求，不是談判籌碼。</li>
+            <li>別人給他東西他沒說謝謝 → 你代替他說：「我們謝謝阿姨！」— 而不是「快說謝謝！」</li>
+          </ul>
+        </div>
+      </div>
+      <div class="collapsible">
+        <div class="collapsible-header">策略三：培養真正的感恩心（不只是說「謝謝」） <span class="arrow"><i class="fas fa-chevron-down"></i></span></div>
+        <div class="collapsible-body">
+          <p>「說謝謝」只是嘴巴的動作。<strong>真正的感恩是一種感受</strong>——感受到別人的善意，並且心裡覺得溫暖。這需要時間和體驗來培養。</p>
+          <ul>
+            <li><strong>每天睡前聊三件開心的事</strong>：「今天什麼事讓你開心？」— 這是在訓練大腦主動去「注意」生活中的好事</li>
+            <li><strong>描述別人的付出</strong>：「哇，奶奶花了好長時間煮這碗湯，好香呀！」— 讓他「看見」別人在他身上花的心思</li>
+            <li><strong>當他自發說了謝謝</strong>：「你說了謝謝！阿姨聽到一定好開心。」— 具體肯定，強化這個行為的神經通路</li>
+          </ul>
+        </div>
+      </div>
+      <div class="dialogue" style="margin-top:16px;">
+        <div class="label">💬 實際操作示範</div>
+        <div class="line child"><div class="label">仁仁</div>「給我果汁！」</div>
+        <div class="line parent"><div class="label">✅ 你（微笑，不帶壓力）</div>「你想喝果汁啊～可以說『請給我果汁好嗎？』」</div>
+        <div class="line child"><div class="label">仁仁（可能說，也可能不說）</div>「請給我果汁。」</div>
+        <div class="line parent"><div class="label">✅ 你</div>「好的，給你！」（開心地遞過去）</div>
+        <div style="text-align:center;font-size:.85em;color:var(--text-light);margin-top:8px;padding:8px;background:#F0F0F0;border-radius:8px;">⏳ 這個過程會重複<strong>幾百次</strong>。每一次都在他大腦裡鋪設一小段「禮貌的神經通路」。最終，它會變成自動反應，不需要你提醒。</div>
+      </div>
+      <div class="principle-box accent" style="margin-top:16px;">
+        <h4>📅 什麼時候他會自己說「謝謝」？</h4>
+        <p>禮貌用語一般在 <strong>4-5歲</strong> 開始自然穩定出現。真正「懂得感恩」（理解別人為我做了額外的事）大約在 <strong>6-7歲</strong>。現在你做的是<strong>播種</strong>，不是收割。耐心等花開。🌱</p>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>🌱 仁仁成長系統 — 以科學為基礎，以愛為核心</p>
+    <p style="margin-top:8px;font-size:.8em;">最後更新：2025年2月</p>
+  </footer>
+</div>
+
+<!-- ==================== PAGE 6: TOOLBOX ==================== -->
+<div class="page" id="page-toolbox">
+  <div class="section">
+    <div class="section-header">
+      <h2><span class="icon" style="background:var(--accent)"><i class="fas fa-toolbox"></i></span>實踐工具箱</h2>
+      <p>不需要背理論，拿去直接用就好</p>
+    </div>
+    <div class="divider" style="background:var(--accent)"></div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>🌅 3歲日常作息參考</h3>
+        <p style="font-size:.85em;color:var(--text-light);margin-bottom:12px;">不需要精確到分鐘，重點是「可預測的節奏」讓他有安全感</p>
+        <table style="width:100%;border-collapse:collapse;font-size:.9em;">
+          <tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;width:100px;"><strong>7:00</strong></td><td>起床 + 大擁抱 + 「你夢到什麼了？」</td></tr>
+          <tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;"><strong>7:30</strong></td><td>早餐（讓他自己吃，弄髒桌子沒關係）</td></tr>
+          <tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;"><strong>8:00</strong></td><td>出去玩！（戶外 > 室內，永遠是）</td></tr>
+          <tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;"><strong>10:00</strong></td><td>點心 + 自由自在地玩</td></tr>
+          <tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;"><strong>10:30</strong></td><td>看書、拼圖、畫畫、蓋積木</td></tr>
+          <tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;"><strong>12:00</strong></td><td>午餐</td></tr>
+          <tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;"><strong>12:30</strong></td><td>午睡 💤（很重要，別省掉）</td></tr>
+          <tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;"><strong>15:00</strong></td><td>繼續玩 + 找小朋友一起</td></tr>
+          <tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;"><strong>17:30</strong></td><td>晚餐</td></tr>
+          <tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;"><strong>18:30</strong></td><td>親子時間（散步、遊戲、聊天）</td></tr>
+          <tr style="border-bottom:1px solid #eee;"><td style="padding:6px 0;"><strong>19:30</strong></td><td>睡前儀式：洗澡→故事→聊天→晚安</td></tr>
+          <tr><td style="padding:6px 0;"><strong>20:00</strong></td><td>入睡 🌙</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>💬 急救對話卡（存手機裡）</h3>
+        <h4 style="margin:12px 0 8px;">😡 他大崩潰/發脾氣：</h4>
+        <ol style="font-size:.92em;">
+          <li>蹲下來，眼睛對齊他的眼睛</li>
+          <li>「你現在很[生氣/難過/害怕]。」</li>
+          <li>「你[生氣/難過]是因為 _____。」</li>
+          <li>「這個感覺是正常的，爸爸在這裡。」</li>
+          <li>安靜等他… 不解決，只陪伴</li>
+          <li>情緒過了：「你想要___，但___。我們可以___。」</li>
+        </ol>
+        <h4 style="margin:16px 0 8px;">😢 他輸了/做不到：</h4>
+        <ol style="font-size:.92em;">
+          <li>「沒做到，好難過啊。」</li>
+          <li>「你很努力了，我看到了。」</li>
+          <li>讓他哭完（不催、不講道理）</li>
+          <li>「準備好了我們再來一次？」</li>
+        </ol>
+        <h4 style="margin:16px 0 8px;">🙏 他「沒禮貌」：</h4>
+        <ol style="font-size:.92em;">
+          <li>「給我___！」→「可以說『請給我___好嗎？』」</li>
+          <li>別人幫他→你先說「我們謝謝___！」</li>
+          <li>他自己說了→「你說了謝謝！好棒！」</li>
+        </ol>
+        <h4 style="margin:16px 0 8px;">🔥 你自己快爆了：</h4>
+        <ol style="font-size:.92em;">
+          <li>深呼吸 1... 2... 3... （6秒鐘）</li>
+          <li>「爸爸/媽媽需要冷靜一下。」（離開房間也可以）</li>
+          <li>冷靜後回來修復：「對不起，剛才我太大聲了。」</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px;">
+      <h3>🎮 他現在可以玩的活動（3-6歲）</h3>
+      <div class="grid-3">
+        <div>
+          <h4>🧠 動腦的</h4>
+          <ul style="font-size:.9em;">
+            <li>拼圖（從4片開始慢慢加）</li>
+            <li>分類遊戲（這個紅的放一起！）</li>
+            <li>積木/樂高（隨便蓋，別管像不像）</li>
+            <li>買菜時數蘋果（日常就是課堂）</li>
+            <li>故事接龍（你一句我一句瞎編）</li>
+          </ul>
+        </div>
+        <div>
+          <h4>💪 練心的</h4>
+          <ul style="font-size:.9em;">
+            <li>角色扮演（當醫生、煮飯、開商店）</li>
+            <li>合作遊戲（一起蓋一座城堡）</li>
+            <li>情緒卡片（這個臉是什麼心情？）</li>
+            <li>輪流遊戲（學等待，超重要）</li>
+            <li>一起看繪本聊裡面的角色感受</li>
+          </ul>
+        </div>
+        <div>
+          <h4>🏃 動身體的</h4>
+          <ul style="font-size:.9em;">
+            <li>跑跳攀爬（越瘋越好）</li>
+            <li>畫畫、穿珠子（練小手肌肉）</li>
+            <li>踢球、接球（協調能力）</li>
+            <li>跟著音樂跳舞（節奏感）</li>
+            <li>走平衡木/單腳站（前庭發展）</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>🌱 仁仁成長系統 — 以科學為基礎，以愛為核心</p>
+    <p style="margin-top:8px;font-size:.8em;">最後更新：2025年2月</p>
+  </footer>
+</div>
+
+<!-- ==================== PAGE 7: MILESTONES ==================== -->
+<div class="page" id="page-milestones">
+  <div class="section">
+    <div class="section-header">
+      <h2><span class="icon" style="background:var(--primary)"><i class="fas fa-flag"></i></span>仁仁的成長里程碑</h2>
+      <p>每一個「第一次」都值得被記住 ❤️</p>
+    </div>
+    <div class="divider"></div>
+
+    <div class="principle-box">
+      <h4>📝 怎麼更新？</h4>
+      <p>有新的里程碑隨時告訴我——日期、事件、你的感受——我幫你更新上去。也可以在 Notion 資料庫裡自己加。建議拍張照一起記錄！</p>
+    </div>
+
+    <div class="timeline" style="margin-top:24px;">
+      <div class="timeline-item">
+        <div class="date">2023年 · 出生</div>
+        <h4>👶 仁仁來到這個世界</h4>
+        <p>一段充滿愛、韌性和好奇心的旅程正式開始</p>
+      </div>
+      <div class="timeline-item">
+        <div class="date">待記錄</div>
+        <h4>🦷 第一次看牙醫</h4>
+        <p>（告訴我日期和他的反應，我幫你記下來）</p>
+      </div>
+      <div class="timeline-item">
+        <div class="date">待記錄</div>
+        <h4>🚿 第一次自己洗澡</h4>
+        <p>（告訴我日期和過程）</p>
+      </div>
+      <div class="timeline-item">
+        <div class="date">待記錄</div>
+        <h4>📚 第一天上學</h4>
+        <p>（告訴我日期和你們的感受）</p>
+      </div>
+      <div class="timeline-item" style="opacity:.5;">
+        <div class="date">未來</div>
+        <h4>✨ 更多里程碑等待記錄...</h4>
+        <p>每一個小小的「第一次」，都是他成長的證據</p>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>🌱 仁仁成長系統 — 以科學為基礎，以愛為核心</p>
+    <p style="margin-top:8px;font-size:.8em;">最後更新：2025年2月</p>
+  </footer>
+</div>
+
+</div><!-- end #main -->
+
+<script>
+// === PAGE SWITCHING (tab-based navigation) ===
+function switchPage(pageId){
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  // Show target page
+  const target=document.getElementById('page-'+pageId);
+  if(target) target.classList.add('active');
+  // Update nav active state
+  document.querySelectorAll('#topnav .nav-scroll a').forEach(a=>{
+    a.classList.toggle('active',a.dataset.page===pageId);
+    if(a.classList.contains('active')){
+      a.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+    }
+  });
+  // Scroll to top of page
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+// Nav link click handlers
+document.querySelectorAll('#topnav .nav-scroll a').forEach(link=>{
+  link.addEventListener('click',()=>{
+    switchPage(link.dataset.page);
+  });
+});
+
+// === Back to top button ===
+const backTop=document.getElementById('back-top');
+window.addEventListener('scroll',()=>{
+  backTop.classList.toggle('show',window.scrollY>400);
+});
+backTop.addEventListener('click',()=>{
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+// === Tab switching (for sub-tabs like age stages) ===
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const tab=btn.dataset.tab;
+    const container=btn.closest('.section, section');
+    container.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    container.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(tab).classList.add('active');
+  });
+});
+
+// === Collapsible ===
+document.querySelectorAll('.collapsible-header').forEach(header=>{
+  header.addEventListener('click',()=>{
+    header.classList.toggle('open');
+    header.nextElementSibling.classList.toggle('open');
+  });
+});
+</script>
+</body>
+</html>
